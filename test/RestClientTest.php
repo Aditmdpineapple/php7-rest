@@ -2,7 +2,6 @@
 
 namespace RestClient\Test;
 
-use RestClient\Request;
 use RestClient\RestClient;
 
 class RestClientTest extends \PHPUnit_Framework_TestCase
@@ -32,5 +31,24 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $response = $this->client->people->get(1);
 
         $this->assertEquals(json_encode(json_decode($response)), json_encode($expected));
+    }
+
+    public function testList()
+    {
+        $expected = array(
+            ['name' => 'Roemer Bakker', 'job' => 'Software Engineer'],
+            ['name' => 'John Appleseed', 'job' => 'System Administrator']
+        );
+        $response = $this->client->people->list();
+
+        $this->assertEquals(json_encode($expected), json_encode(json_decode($response)));
+    }
+
+    public function testCreate()
+    {
+        $expected = ['name' => 'Jane Appleseed', 'job' => 'Researcher'];
+        $response = $this->client->people->create(json_encode($expected));
+
+        $this->assertEquals(json_encode($expected), json_encode(json_decode($response)));
     }
 }
