@@ -1,0 +1,27 @@
+{
+  "name": "roemerb/php7-rest",
+  "description": "A simple REST client for PHP 7.0+",
+  "type": "library",
+  "keywords": ["http", "rest", "client", "php-7", "php-7.0", "curl"],
+  "homepage": "https://github.com/roemerb/php7-rest",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roemer N. Bakker",
+      "email": "contact@roemerbakker.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.0 || ^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "RestClient\\": "src/"
+    }
+  }
+}
