@@ -44,6 +44,7 @@ There are some options that can be specified upon initialisation:
 - `cert` File path to certificate bundle that will be loaded to avoid curl error 60
 - `content_type` Custom value for the `Content-Type` header. Defaults to `application/json`. Set to `false` if you don't want this header at all.
 - `user_agent` Custom value for the `User-Agent` header. Defaults to `Php7Rest/{Version}`. Set to `false` if you don't want this header at all.
+- `insecure` Set to true to dissable curl host verification.
 
 The header options may also be set by using `$client->addHeader($name, $value)`. It will override the defaults.
 
