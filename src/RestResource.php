@@ -64,6 +64,16 @@ class RestResource implements RestResourceContract
     }
 
     /**
+     * Registers a custom method
+     *
+     * @param Request $request
+     */
+    public function register_method(Request $request)
+    {
+        $this->requests[$request->getMethod()] = $request;
+    }
+
+    /**
      * Gets resource string
      *
      * @return string

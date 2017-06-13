@@ -81,6 +81,7 @@ class Person extends AbstractRestResource
 {
 	public function __construct()
 	{
+		parent::__construct();
 		// Tell the client where to find your API
 		$this->setConf(RestClient::HTTPS, 'api.myhost.com', ['version' => 2]);
 	}

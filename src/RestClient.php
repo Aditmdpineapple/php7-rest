@@ -75,7 +75,7 @@ class RestClient {
      * Used to query resources.
      *
      * @param $name
-     * @return mixed
+     * @return RestResource
      * @throws ResourceException
      * @internal param $args
      */
@@ -168,6 +168,12 @@ class RestClient {
         $this->resources[$name] = $resource;
     }
 
+    public function registerMethod($resource, Request $request)
+    {
+        $resource = $this->$resource;
+
+    }
+
     /**
      * Executes a HTTP request
      *
@@ -179,7 +185,6 @@ class RestClient {
     {
         curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $req->getHttpMethod());
         curl_setopt($this->ch, CURLOPT_URL, $this->url($req, $resource));
-        var_dump($this->url($req, $resource));
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 

@@ -2,9 +2,13 @@
 
 namespace RestClient\Test;
 
+use PHPUnit\Framework\TestCase;
 use RestClient\RestClient;
 
-class RestClientTest extends \PHPUnit_Framework_TestCase
+date_default_timezone_set('Europe/Amsterdam');
+require_once( dirname(__FILE__) . '/../vendor/autoload.php' );
+
+class RestClientTest extends TestCase
 {
     /**
      * @var RestClient
@@ -16,8 +20,6 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->client = new RestClient(self::MOCK_SCHEME, self::MOCK_HOST, [
             'version' => 'v2'
         ]);
