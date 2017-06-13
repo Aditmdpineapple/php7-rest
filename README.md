@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/spryngpayments/php.svg?branch=master)](https://travis-ci.org/spryngpayments/php)
+
 # php7-rest
 
 php7-rest is a very simple Http REST client with some optimization for PHP v7.0+. It's not necessarily intended to be very feature-rich or even to be widely used, but merely to provide a simple API for specifying REST API behaviour. 
