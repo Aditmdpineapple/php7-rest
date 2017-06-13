@@ -30,7 +30,7 @@ class Request
      *
      * @return mixed
      */
-    public function toString()
+    public function toString() : string
     {
         return str_replace('{id}', $this->getId(), $this->getMethod());
     }
@@ -40,7 +40,7 @@ class Request
      *
      * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod() : string
     {
         return $this->httpMethod;
     }
@@ -50,7 +50,7 @@ class Request
      *
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->method;
     }

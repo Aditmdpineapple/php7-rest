@@ -79,7 +79,7 @@ class RestClient {
      * @throws ResourceException
      * @internal param $args
      */
-    public function __get($name)
+    public function __get($name) : RestResource
     {
         $name = strtolower($name);
         if (isset($this->resources[$name]) && !is_null($this->resources[$name]))
@@ -168,7 +168,7 @@ class RestClient {
         $this->resources[$name] = $resource;
     }
 
-    public function registerMethod($resource, Request $request)
+    public function registerMethod($resource, Request $request) : void
     {
         $resource = $this->$resource;
 
@@ -179,9 +179,9 @@ class RestClient {
      *
      * @param Request $req
      * @param string $resource
-     * @return mixed
+     * @return string
      */
-    public function do(Request $req, $resource)
+    public function do(Request $req, $resource) : string
     {
         curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $req->getHttpMethod());
         curl_setopt($this->ch, CURLOPT_URL, $this->url($req, $resource));
@@ -209,7 +209,7 @@ class RestClient {
      * @param string $resource
      * @return string
      */
-    public function url(Request $req, $resource)
+    public function url(Request $req, $resource) : string
     {
         $url = '';
         $url .= $this->scheme . '://';
@@ -263,7 +263,7 @@ class RestClient {
      *
      * @return mixed
      */
-    public function getLastResponse()
+    public function getLastResponse() : string
     {
         return $this->response;
     }
@@ -271,7 +271,7 @@ class RestClient {
     /**
      * @return mixed
      */
-    public function getLastResponseCode()
+    public function getLastResponseCode() : int
     {
         return $this->responseCode;
     }

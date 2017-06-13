@@ -38,7 +38,7 @@ class RestResource implements RestResourceContract
     protected $requests;
 
     /**
-     * AbstractResource constructor.
+     * RestResource constructor.
      *
      * @param RestClient $client
      * @param null $resource
@@ -78,7 +78,7 @@ class RestResource implements RestResourceContract
      *
      * @return string
      */
-    public function getResource()
+    public function getResource() : string
     {
         return $this->resource;
     }
@@ -90,7 +90,7 @@ class RestResource implements RestResourceContract
      * @return mixed
      * @throws ResourceException
      */
-    public function get($id)
+    public function get($id) : string
     {
         // Check if the resource supports get
         if (!$this->supports(RestClient::METHOD_GET))
@@ -114,7 +114,7 @@ class RestResource implements RestResourceContract
      * @return mixed
      * @throws ResourceException
      */
-    public function list()
+    public function list() : string
     {
         // Check if the resource supports listing
         if (!$this->supports(RestClient::METHOD_LIST))
@@ -131,7 +131,7 @@ class RestResource implements RestResourceContract
      * @return mixed
      * @throws ResourceException
      */
-    public function create($resource)
+    public function create($resource) : string
     {
         // Check if the resource supports creation
         if (!$this->supports(RestClient::METHOD_CREATE))
@@ -149,7 +149,15 @@ class RestResource implements RestResourceContract
         return $this->client->do($req, $this->getResource());
     }
 
-    public function update($id, $resource)
+    /**
+     * Update a resource instance
+     *
+     * @param $id
+     * @param $resource
+     * @return string
+     * @throws ResourceException
+     */
+    public function update($id, $resource) : string
     {
         // Check if the resource supports patching
         if (!$this->supports(RestClient::METHOD_UPDATE))
@@ -172,6 +180,13 @@ class RestResource implements RestResourceContract
         return $this->client->do($req, $this->getResource());
     }
 
+    /**
+     * Delete a resource instance
+     *
+     * @param $id
+     * @return string
+     * @throws ResourceException
+     */
     public function delete($id)
     {
         if (!$this->supports(RestClient::METHOD_DELETE))
@@ -192,9 +207,9 @@ class RestResource implements RestResourceContract
      * Check if this resource supports a certain method.
      *
      * @param $method
-     * @return mixed
+     * @return bool
      */
-    public function supports($method)
+    public function supports($method) : bool
     {
         return in_array($method, $this->supports);
     }
@@ -205,7 +220,7 @@ class RestResource implements RestResourceContract
      * @param $verb
      * @return string
      */
-    private static function get_http_method_for_verb($verb)
+    private static function get_http_method_for_verb($verb) : string
     {
         $method = '';
         switch ($verb)
@@ -237,7 +252,7 @@ class RestResource implements RestResourceContract
      * @param $verb
      * @return string
      */
-    private static function get_path_for_verb($verb)
+    private static function get_path_for_verb($verb) : string
     {
         $path = '';
         switch($verb)
@@ -262,7 +277,7 @@ class RestResource implements RestResourceContract
      * @param $verb
      * @return bool
      */
-    private static function has_id($verb)
+    private static function has_id($verb) : bool
     {
         $hasId = ['get', 'update', 'delete'];
 
