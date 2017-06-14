@@ -3,6 +3,7 @@
 namespace RestClient\Test;
 
 use PHPUnit\Framework\TestCase;
+use RestClient\Request;
 use RestClient\RestClient;
 
 date_default_timezone_set('Europe/Amsterdam');
@@ -50,6 +51,18 @@ class RestClientTest extends TestCase
     {
         $expected = ['name' => 'Jane Appleseed', 'job' => 'Researcher'];
         $response = $this->client->people->create(json_encode($expected));
+
+        $this->assertEquals(json_encode($expected), json_encode(json_decode($response)));
+    }
+
+    public function testCustomMethod()
+    {
+        $this->client->register_method('people', new Request(RestClient::HTTP_GET, '{id}/job', 'address'));
+
+        $expected = ['job' => 'Software Engineer'];
+
+        // Get address for person with id 1
+        $response = $this->client->people->address(1);
 
         $this->assertEquals(json_encode($expected), json_encode(json_decode($response)));
     }

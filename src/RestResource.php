@@ -64,6 +64,34 @@ class RestResource implements RestResourceContract
     }
 
     /**
+     * Magic method for custom methods
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     * @throws ResourceException
+     */
+    public function __call($name, $arguments)
+    {
+        foreach($this->requests as $request)
+        {
+            if ($request->getName() === $name)
+            {
+                /*
+                 * Check if the arguments are set. Currently, only an ID is supported to be included in the request path.
+                 * As this is the only parameter supported, we check for the first index of the arguments array.
+                 */
+                if (!is_null($arguments[0]))
+                    $request->setId($arguments[0]);
+
+                return $this->client->do($request, $this->getResource());
+            }
+        }
+
+        throw new ResourceException(sprintf('Resource \'%s\' does not have a method \'%s\'.', __CLASS__, $name));
+    }
+
+    /**
      * Registers a custom method
      *
      * @param Request $request

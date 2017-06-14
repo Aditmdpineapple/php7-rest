@@ -6,6 +6,7 @@ class Request
 {
     protected $httpMethod;
     protected $method;
+    protected $name;
     protected $id;
     protected $payload;
 
@@ -14,13 +15,15 @@ class Request
      *
      * @param $httpMethod
      * @param $method
+     * @param null $name
      * @param $id
      * @param null $payload
      */
-    public function __construct($httpMethod, $method, $id = null, $payload = null)
+    public function __construct($httpMethod, $method, $name = null, $id = null, $payload = null)
     {
         $this->httpMethod = $httpMethod;
         $this->method = $method;
+        $this->name = $name;
         $this->id = $id;
         $this->payload = $payload;
     }
@@ -73,6 +76,16 @@ class Request
     public function getPayload()
     {
         return $this->payload;
+    }
+
+    /**
+     * Get's the name of this request
+     *
+     * @return null
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

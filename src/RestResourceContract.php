@@ -17,6 +17,15 @@ interface RestResourceContract {
     public function __construct(RestClient $client, $resource, $supports = []);
 
     /**
+     * Magic method for custom methods
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments);
+
+    /**
      * @param Request $request
      */
     public function register_method(Request $request);

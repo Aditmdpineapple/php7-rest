@@ -168,10 +168,10 @@ class RestClient {
         $this->resources[$name] = $resource;
     }
 
-    public function registerMethod($resource, Request $request) : void
+    public function register_method($resource, Request $request)
     {
         $resource = $this->$resource;
-
+        $resource->register_method($request);
     }
 
     /**
