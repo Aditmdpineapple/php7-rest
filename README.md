@@ -52,7 +52,7 @@ The header options may also be set by using `$client->addHeader($name, $value)`.
 
 **Resources**
 
-Querying data can be done in one of two ways. Either you can register resources which will be magically called, or your existing resource class can extend the `AbstractRestResource` class provided in this library.
+Querying data can be done in one of two ways. Either you can register resources which will be magically called, or your existing resource class can extend the `RestResource` class provided in this library.
 
 **Registering resources**
 
@@ -76,20 +76,32 @@ $client->people->get($id);
 $client->people->address($id);
 ```
 
-**Extending `AbstractRestResource`**
+**Extending `RestResource`**
 
 ```
-class Person extends AbstractRestResource
+class Person extends RestResource
 {
 	public function __construct()
 	{
-		parent::__construct();
-		// Tell the client where to find your API
-		$this->setConf(RestClient::HTTPS, 'api.myhost.com', ['version' => 2]);
+		// Just give the parent constructor some information
+		parent::__construct($restClient, strtolower(__CLASS__);
 	}
 }
 
 $people = new Person();
 $people->get($id);
+```
+
+**Closures**
+
+All methods support closures, so you don't have to wait for a response from an API to continue your business logic. The response will be included as an argument to your function. Use closures as follows:
+
+```
+// Initiate an API call...
+$client->people->get($id, function($response) {
+	// Do something with $response
+});
+
+// ...and continue to do other stuff in the meantime.
 ```
 

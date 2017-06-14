@@ -44,7 +44,7 @@ class RestResource implements RestResourceContract
      * @param null $resource
      * @param array $supports
      */
-    public function __construct(RestClient $client, $resource = null, $supports = [])
+    public function __construct(RestClient $client, $resource = null, $supports = ['get','list','create','update','delete'])
     {
         if (is_null($resource))
             return;
@@ -73,21 +73,39 @@ class RestResource implements RestResourceContract
      */
     public function __call($name, $arguments)
     {
+        // Loop through the supported requests to see if we can find one that matches `name`
         foreach($this->requests as $request)
         {
             if ($request->getName() === $name)
             {
                 /*
-                 * Check if the arguments are set. Currently, only an ID is supported to be included in the request path.
-                 * As this is the only parameter supported, we check for the first index of the arguments array.
+                 * We need to call `RestClient::do()` properly, so we check if there is an ID in the $argumants
+                 * as well as a callable.
                  */
-                if (!is_null($arguments[0]))
-                    $request->setId($arguments[0]);
+                if (!is_null($arguments[0])) // Are there arguments at all?
+                {
+                    // If it's not a callable but it is a string or int, it's an ID
+                    if (!is_callable($arguments[0]) && (is_string($arguments[0]) || is_int($arguments[0])))
+                    {
+                        $request->setId($arguments[0]);
 
+                        if (isset($arguments[1]) && is_callable($arguments[1])) // There is a closure as well
+                        {
+                            return $this->client->do($request, $this->getResource(), $arguments[1]);
+                        }
+                    }
+                    else if (is_callable($arguments[0])) // There only seems to be a callable/closure
+                    {
+                        return $this->client->do($request, $this->getResource(), $arguments[0]);
+                    }
+                }
+
+                // There does not seem to be an ID or a callable
                 return $this->client->do($request, $this->getResource());
             }
         }
 
+        // There was no request with this name in the foreach so the method does not exist.
         throw new ResourceException(sprintf('Resource \'%s\' does not have a method \'%s\'.', __CLASS__, $name));
     }
 
@@ -115,10 +133,11 @@ class RestResource implements RestResourceContract
      * Get a specific resource instance
      *
      * @param $id
-     * @return mixed
+     * @param callable $closure
+     * @return mixed|string
      * @throws ResourceException
      */
-    public function get($id) : string
+    public function get($id, callable $closure = null) : string
     {
         // Check if the resource supports get
         if (!$this->supports(RestClient::METHOD_GET))
@@ -133,33 +152,35 @@ class RestResource implements RestResourceContract
         $req->setId($id);
 
         // Return the result of the execution of the request.
-        return $this->client->do($req, $this->getResource());
+        return $this->client->do($req, $this->getResource(), $closure);
     }
 
     /**
      * List the resource
      *
-     * @return mixed
+     * @param callable $closure
+     * @return mixed|string
      * @throws ResourceException
      */
-    public function list() : string
+    public function list(callable $closure = null) : string
     {
         // Check if the resource supports listing
         if (!$this->supports(RestClient::METHOD_LIST))
             throw new ResourceException(sprintf('%s does not support \'%s\'.', __CLASS__, RestClient::METHOD_LIST));
 
         // Return the result of the execution of the request.
-        return $this->client->do($this->requests[RestClient::METHOD_LIST], $this->getResource());
+        return $this->client->do($this->requests[RestClient::METHOD_LIST], $this->getResource(), $closure);
     }
 
     /**
      * Create a new instance of the resource
      *
      * @param $resource
-     * @return mixed
+     * @param callable $closure
+     * @return mixed|string
      * @throws ResourceException
      */
-    public function create($resource) : string
+    public function create($resource, callable $closure = null) : string
     {
         // Check if the resource supports creation
         if (!$this->supports(RestClient::METHOD_CREATE))
@@ -174,7 +195,7 @@ class RestResource implements RestResourceContract
         $req->setPayload($resource);
 
         // Return the result of the execution of the request.
-        return $this->client->do($req, $this->getResource());
+        return $this->client->do($req, $this->getResource(), $closure);
     }
 
     /**
@@ -182,10 +203,11 @@ class RestResource implements RestResourceContract
      *
      * @param $id
      * @param $resource
+     * @param callable $closure
      * @return string
      * @throws ResourceException
      */
-    public function update($id, $resource) : string
+    public function update($id, $resource, callable $closure = null) : string
     {
         // Check if the resource supports patching
         if (!$this->supports(RestClient::METHOD_UPDATE))
@@ -205,17 +227,18 @@ class RestResource implements RestResourceContract
         $req->setPayload($resource);
 
         // Return the result of the execution of the request.
-        return $this->client->do($req, $this->getResource());
+        return $this->client->do($req, $this->getResource(), $closure);
     }
 
     /**
      * Delete a resource instance
      *
      * @param $id
+     * @param callable $closure
      * @return string
      * @throws ResourceException
      */
-    public function delete($id)
+    public function delete($id, callable $closure = null)
     {
         if (!$this->supports(RestClient::METHOD_DELETE))
             throw new ResourceException(sprintf('%s does not support \'%s\'.', __CLASS__, RestClient::METHOD_DELETE));
@@ -228,7 +251,7 @@ class RestResource implements RestResourceContract
         $req->setId($id);
 
         // Return the result of the execution of the request.
-        return $this->client->do($req, $this->getResource());
+        return $this->client->do($req, $this->getResource(), $closure);
     }
 
     /**

@@ -66,4 +66,12 @@ class RestClientTest extends TestCase
 
         $this->assertEquals(json_encode($expected), json_encode(json_decode($response)));
     }
+
+    public function testClosures()
+    {
+        $expected = ['name' => 'Roemer Bakker', 'job' => 'Software Engineer'];
+        $this->client->people->get(1, function($response) use ($expected) {
+            $this->assertEquals(json_encode(json_decode($response)), json_encode($expected));
+        });
+    }
 }

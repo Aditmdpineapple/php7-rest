@@ -41,27 +41,27 @@ interface RestResourceContract {
      * Get a specific resource instance
      *
      * @param $id
-     * @return mixed
-     * @throws ResourceException
+     * @param callable $closure
+     * @return mixed|string
      */
-    public function get($id) : string;
+    public function get($id, callable $closure = null) : string;
 
     /**
      * List the resource
      *
-     * @return mixed
-     * @throws ResourceException
+     * @param callable $closure
+     * @return mixed|string
      */
-    public function list() : string;
+    public function list(callable $closure = null) : string;
 
     /**
      * Create a new instance of the resource
      *
      * @param $resource
-     * @return mixed
-     * @throws ResourceException
+     * @param callable $closure
+     * @return mixed|string
      */
-    public function create($resource) : string;
+    public function create($resource, callable $closure = null) : string;
 
     /**
      * Update a resource instance
@@ -71,16 +71,16 @@ interface RestResourceContract {
      * @return string
      * @throws ResourceException
      */
-    public function update($id, $resource) : string;
+    public function update($id, $resource, callable $closure = null) : string;
 
     /**
      * Delete a resource instance
      *
      * @param $id
+     * @param callable $closure
      * @return string
-     * @throws ResourceException
      */
-    public function delete($id);
+    public function delete($id, callable $closure = null);
 
     /**
      * Check if this resource supports a certain method.

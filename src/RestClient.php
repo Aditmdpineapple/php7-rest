@@ -179,9 +179,10 @@ class RestClient {
      *
      * @param Request $req
      * @param string $resource
+     * @param callable $closure
      * @return string
      */
-    public function do(Request $req, $resource) : string
+    public function do(Request $req, $resource, callable $closure = null) : string
     {
         curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $req->getHttpMethod());
         curl_setopt($this->ch, CURLOPT_URL, $this->url($req, $resource));
@@ -198,6 +199,9 @@ class RestClient {
         $this->setResponse(curl_exec($this->ch));
         $this->setResponseCode(curl_getinfo($this->ch, CURLINFO_RESPONSE_CODE));
         $this->setResponse(curl_exec($this->ch));
+
+        if (!is_null($closure))
+            call_user_func($closure, $this->getLastResponse());
 
         return $this->getLastResponse();
     }
