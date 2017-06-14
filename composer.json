@@ -1,5 +1,6 @@
 {
   "name": "roemerb/php7-rest",
+  "version": "1.0",
   "description": "A simple REST client for PHP 7.0+",
   "type": "library",
   "keywords": ["http", "rest", "client", "php-7", "php-7.0", "curl"],

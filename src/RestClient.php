@@ -189,11 +189,11 @@ class RestClient {
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 
-        switch($req->getHttpMethod())
+        $method = $req->getHttpMethod();
+        if ($method === self::HTTP_POST || $method === self::HTTP_PATCH)
         {
-            case self::HTTP_POST:
-                curl_setopt($this->ch, CURLOPT_POST, true);
-                curl_setopt($this->ch, CURLOPT_POSTFIELDS, $req->getPayload());
+            curl_setopt($this->ch, CURLOPT_POST, true);
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $req->getPayload());
         }
 
         $this->setResponse(curl_exec($this->ch));
