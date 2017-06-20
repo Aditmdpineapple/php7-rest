@@ -43,32 +43,12 @@ class RestClient {
     public function __construct($scheme = self::HTTPS, $host = '', $options = array()) {
         // Initiate cURL
         $this->ch = curl_init();
-
-        // Strip possible '://' from scheme
-        $scheme = str_replace('/', '', $scheme);
-        $scheme = str_replace(':', '', $scheme);
-        $this->scheme   = $scheme;
-
-        // Strip possible trailing / from the host
-        if ($host[strlen($host) - 1] === '/')
-            $host = substr($host, 0, -1);
-
-        // User may have already supplied a port in the host
-        $hostColon = strpos($host, ':');
-        if ($hostColon !== false)
-        {
-            $port = substr($host, $hostColon);
-            if ((int) $port !== 0)
-            {
-                // The port is in the host. Override options.
-                $this->options['port'] = (int) $port;
-            }
-        }
+        $this->scheme = $scheme;
         $this->host = $host;
 
         // Set and apply options
         $this->options = $options;
-        $this->apply_options();
+        $this->apply_args();
     }
 
     /**
@@ -91,10 +71,30 @@ class RestClient {
     }
 
     /**
-     * Evaluates the provided options and applies the preferences
+     * Evaluates the provided initialise arguments and applies them
      */
-    private function apply_options()
+    private function apply_args()
     {
+        // Strip possible '://' from scheme
+        $this->scheme = str_replace('/', '', $this->scheme);
+        $this->scheme = str_replace(':', '', $this->scheme);
+
+        // Strip possible trailing / from the host
+        if ($this->host[strlen($this->host) - 1] === '/')
+            $this->host = substr($this->host, 0, -1);
+
+        // User may have already supplied a port in the host
+        $hostColon = strpos($this->host, ':');
+        if ($hostColon !== false)
+        {
+            $port = substr($this->host, $hostColon);
+            if ((int) $port !== 0)
+            {
+                // The port is in the host. Override options.
+                $this->options['port'] = (int) $port;
+            }
+        }
+
         // version
         if (isset($this->options['version']))
         {
@@ -108,9 +108,12 @@ class RestClient {
         }
 
         // cert
-        if (isset($this->options['cert']) && is_file($this->options['cert']))
+        if (isset($this->options['cert']))
         {
-            curl_setopt($this->ch, CURLOPT_CAINFO, $this->options['cert']);
+            if (is_file($this->options['cert']))
+                curl_setopt($this->ch, CURLOPT_CERTINFO, $this->options['cert']);
+            else
+                throw new \Exception(sprintf('\'%s\' does not seem to be a file.', $this->options['cert']));
         }
 
         // content_type
