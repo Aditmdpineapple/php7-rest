@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/spryngpayments/php.svg?branch=master)](https://travis-ci.org/spryngpayments/php)
+[![Build Status](https://travis-ci.org/Roemerb/php7-rest.svg?branch=master)](https://travis-ci.org/Roemerb/php7-rest)
 
 # php7-rest
 
@@ -9,7 +9,7 @@ php7-rest is a very simple Http REST client with some optimization for PHP v7.0+
 
 If you'd like to install this library, I recommend using Composer:
 
-```
+```shell
 composer require roemeb/php7-rest
 ```
 
@@ -21,7 +21,7 @@ Though, as this library does not have any dependencies - it only requires `ext-c
 
 Initialize a client for an API like so:
 
-```
+```php
 require_once('vendor/autoload.php');
 
 use RestClient\RestClient;
@@ -31,7 +31,7 @@ $client = new RestClient(RestClient::HTTPS, 'api.myhost.com', ['version' => 2]);
 
 You only have to specify the scheme and host. If you need to use any kind of authentication, you can do this by adding headers. Generating oauth tokens is not currently part of this library.
 
-```
+```shell
 $token = Oauth::gen_token($credentials);
 
 $client->addHeader('Authorization', 'Bearer ' . $token);
@@ -58,7 +58,7 @@ Querying data can be done in one of two ways. Either you can register resources 
 
 Registering resources is quite simple. Simply provide a name and an array of methods this resource supports. Additionally, if your resource supports non-default methods, you can register these as well. If these require an ID, it will be included in the request automatically.
 
-```
+```php
 $client->register('people', ['list', 'get', 'create']);
 $client->registerMethod('people', [
 	'name' 		=> 'address',
@@ -78,7 +78,7 @@ $client->people->address($id);
 
 **Extending `RestResource`**
 
-```
+```php
 class Person extends RestResource
 {
 	public function __construct()
@@ -96,7 +96,7 @@ $people->get($id);
 
 All methods support closures, so you don't have to wait for a response from an API to continue your business logic. The response will be included as an argument to your function. Use closures as follows:
 
-```
+```php
 // Initiate an API call...
 $client->people->get($id, function($response) {
 	// Do something with $response
