@@ -165,7 +165,8 @@ class RestClient {
         }
     }
 
-    public function register($name, $supports)
+    public function register($name, $supports = [self::METHOD_GET, self::METHOD_LIST, self::METHOD_CREATE,
+        self::METHOD_UPDATE, self::METHOD_DELETE])
     {
         $resource = new RestResource($this, $name, $supports);
         $this->resources[$name] = $resource;

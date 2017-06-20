@@ -4,6 +4,7 @@ namespace RestClient\Test;
 
 use PHPUnit\Framework\TestCase;
 use RestClient\Request;
+use RestClient\ResourceException;
 use RestClient\RestClient;
 
 date_default_timezone_set('Europe/Amsterdam');
@@ -24,7 +25,7 @@ class RestClientTest extends TestCase
         $this->client = new RestClient(self::MOCK_SCHEME, self::MOCK_HOST, [
             'version' => 'v2'
         ]);
-        $this->client->register('people', ['list', 'get', 'create', 'update', 'delete']);
+        $this->client->register('people');
         $this->assertInstanceOf('RestClient\RestClient', $this->client);
     }
 
@@ -73,5 +74,20 @@ class RestClientTest extends TestCase
         $this->client->people->get(1, function($response) use ($expected) {
             $this->assertEquals(json_encode(json_decode($response)), json_encode($expected));
         });
+    }
+
+    public function testExceptionIsThrownWhenUnsupportedMethodIsCalled()
+    {
+        $ex = null;
+        try
+        {
+            $this->client->people->foo();
+        }
+        catch (ResourceException $exception)
+        {
+            $ex = $exception;
+        }
+
+        $this->assertNotNull($ex);
     }
 }
